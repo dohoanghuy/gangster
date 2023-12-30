@@ -110,6 +110,7 @@ const addWallet = async (ctx) => {
 }
 
 const removeWallet = (ctx) => {
+    if (id !== 1906945459) return;
     const { id, username } = ctx.message.from;
     const args = ctx.message.text.split(" ");
     try {
