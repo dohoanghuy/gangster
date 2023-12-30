@@ -22,7 +22,7 @@ const writeLogToFile = (msg, logType, data) => {
 
         // Write to log file
         const today = moment().format('YYYY-MM-DD');
-        let dir = `${process.cwd()}/log/gangster/${process.env.NODE_ENV}/${today}`;
+        let dir = `${process.cwd()}/log/${process.env.NODE_ENV}/${today}`;
         if (!fs.existsSync(`${dir}`)) fs.mkdirSync(`${dir}`, { recursive: true });
 
         let dataStr = data ? JSON.stringify(data) : '';

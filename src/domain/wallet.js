@@ -1,7 +1,6 @@
 const fs = require('fs');
-const ethers = require('ethers');
 const { logger } = require('../util');
-const { readFileToJson } = require('../../common/helper');
+const { readFileToJson } = require('../common/helper');
 const { execSync } = require('child_process');
 
 const buildRegistedWalletMsg = (wallets) => {
@@ -26,8 +25,8 @@ const commitWallet = (id, msg) => {
         execSync(`git pull`, { cwd: process.cwd() });
         logger.info(`git pull`, { cwd: process.cwd() });
 
-        execSync(`git add ${process.cwd()}/gangster/data/${id}/wallets.json`, { cwd: process.cwd() });
-        logger.info(`git add ${process.cwd()}/gangster/data/${id}/wallets.json`, { cwd: process.cwd() });
+        execSync(`git add ${process.cwd()}/src/data/${id}/wallets.json`, { cwd: process.cwd() });
+        logger.info(`git add ${process.cwd()}/src/data/${id}/wallets.json`, { cwd: process.cwd() });
 
         execSync(`git commit -m "user ${id} ${msg} wallet"`, { cwd: process.cwd() });
         logger.info(`git commit -m "user ${id} ${msg} wallet"`, { cwd: process.cwd() });
@@ -60,7 +59,7 @@ const addWallet = async (ctx) => {
         );
 
         // Set wallet data
-        const dir = `${process.cwd()}/gangster/data/${id}`;
+        const dir = `${process.cwd()}/src/data/${id}`;
         if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
         let wallets;
@@ -80,12 +79,10 @@ const addWallet = async (ctx) => {
         for (let i = 0; i < walletList.length; i++) {
             if (
                 walletList[i].walletAddress.length > 44 // 42 is evm, 44 is solana
-                || !walletList[i].walletAddress.startsWith('0x')
+                // || !walletList[i].walletAddress.startsWith('0x') // to accept solana
             ) {
                 return ctx.telegram.sendMessage(id, "walletAddress không hợp lệ");
             }
-            let walletCheck = new ethers.Wallet(walletList[i].walletAddress);
-            console.log(walletCheck);
 
 
             const wallet = wallets.find(w => w.walletAddress === walletList[i].walletAddress);
@@ -120,7 +117,7 @@ const removeWallet = (ctx) => {
         if (args.length < 3) return ctx.telegram.sendMessage(id, "Thiếu walletAddress");
         const [, , walletAddress] = args;
 
-        let dir = `${process.cwd()}/gangster/data/${id}`;
+        let dir = `${process.cwd()}/src/data/${id}`;
         if (!fs.existsSync(dir)) return ctx.telegram.sendMessage(id, `Tài khoản chưa đăng ký ví`);
 
         const walletPath = `${dir}/wallets.json`;;
@@ -149,7 +146,7 @@ const getWallet = (ctx) => {
     const { id, username } = ctx.message.from;
     try {
         logger.info(`[getWallet] for ${id} ${username}`);
-        let dir = `${process.cwd()}/gangster/data/${id}`;
+        let dir = `${process.cwd()}/src/data/${id}`;
         if (!fs.existsSync(dir)) return ctx.telegram.sendMessage(id, `Tài khoản chưa đăng ký ví`);
 
         const walletPath = `${dir}/wallets.json`;;
@@ -172,7 +169,7 @@ const getWallet = (ctx) => {
 
 const checkWalletOwner = (id, fromWalletAddress) => {
     try {
-        let dir = `${process.cwd()}/gangster/data/${id}`;
+        let dir = `${process.cwd()}/src/data/${id}`;
         if (!fs.existsSync(dir)) return ctx.telegram.sendMessage(id, `Tài khoản chưa đăng ký ví`);
 
         const walletPath = `${dir}/wallets.json`;;
