@@ -69,7 +69,7 @@ const addWallet = async (ctx) => {
             fs.writeFileSync(walletPath, JSON.stringify({ username, telegramId: id, whitelist: true, wallets: walletList }));
             logger.info(`[addWallet] ${id} ${username} first time commit`);
             commitWallet(id, 'add');
-            return ctx.telegram.sendMessage(id, `Đăng kí ví thành công\n${buildRegistedWalletMsg(wallets)}`);
+            return ctx.telegram.sendMessage(id, `Đăng kí ví thành công\n${buildRegistedWalletMsg(walletList)}`);
         }
 
         // Second time register
