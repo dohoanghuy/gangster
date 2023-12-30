@@ -26,7 +26,6 @@ const writeLogToFile = (msg, logType, data) => {
         if (!fs.existsSync(`${dir}`)) fs.mkdirSync(`${dir}`, { recursive: true });
 
         let dataStr = data ? JSON.stringify(data) : '';
-        if (logType === 'error') dataStr = data.toString();
         const line = `${moment().toString()} - ${JSON.stringify(msg)} ${dataStr}`;
 
         const filename = `${dir}/${logType}.txt`;
